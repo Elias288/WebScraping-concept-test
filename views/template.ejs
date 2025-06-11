@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web scrapping github action</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        #root {
+            max-width: 800px;
+            margin-inline: auto;
+        }
+
+        .postContent {
+            margin-bottom: 2rem;
+        }
+
+        .postContent img {
+            aspect-ratio: 4/3;
+            object-fit: contain;
+            width: 250px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Web scraping</h1>
+    <div id="root">
+        <div class="postsContainer">
+            <% items.forEach(function(item) { %>
+                <%- include("partials/item", item) %>
+                    <% }); %>
+        </div>
+    </div>
+</body>
+
+</html>
