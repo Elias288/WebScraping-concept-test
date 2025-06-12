@@ -1,1 +1,131 @@
 # WebScraping githubActions
+
+Prueba de concepto de página web estática haciendo web scraping con github actions
+
+**Indice**
+
+- [Funcionamiento](#funcionamiento)
+    - [Web scraping script](#web-scraping-script)
+    - [Github Action](#github-action)
+
+## Funcionamiento
+
+El funcionamiento de esta prueba de concepto se separa en 2: Script encargado de obtener la información y construir el html; y el github action que se encarga de reconstruir la página ejecutando el script y publicándolo en github-pages.
+
+### Web Scraping Script
+
+**Paso 1 (Fetching data)**
+
+Como primer paso está la de obtener la información usando la función `fetch` y dando forma a la data con el paquete [cheerio](https://www.npmjs.com/package/cheerio).
+
+```ts
+const URL = "<page url>";
+
+async function fetchData(): Promise<Product[]> {
+  const res = await fetch(URL);
+  const page = await res.text();
+  const $ = cheerio.load(page);
+  const productsCards = $(".product-card");
+
+  const products: Product[] = productsCards
+    .map((_, el) => {
+      const title = $(el).find(".product-title").text().trim();
+      const image = $(el).find(".product-thumb img").attr("src") ?? "";
+      const price = $(el).find(".product-price-fiat").text().trim();
+      const date = $(el).find(".wish-waiting-time").text().trim();
+
+      return { title, image, price, date };
+    })
+    .get();
+
+  return products;
+}
+```
+
+**Paso 2 (Cargando la información)**
+
+Una vez obtenida la información se construirá un html siguiendo un [template.ejs](./views/template.ejs) a partir de un archivo `ejs` usando el paquete [ejs](https://www.npmjs.com/package/ejs)
+
+```ts
+const TEMPLATE_PATH ='./views/template.ejs' 
+const OUT_HTML_FILE = "./dist/index.html"
+
+function loadData(): void {
+  const posts = fetchData()
+  posts.then(posts => {
+    const data = {
+      items: posts
+    }
+
+    ejs.renderFile(TEMPLATE_PATH, data, (err, html) => {
+      if(err) {
+        console.error("Error al renderizar: ", err);
+        return
+      }
+
+      fs.writeFileSync(OUT_HTML_FILE, html)
+    })
+  })
+}
+```
+
+Como resultado se crea un `index.html` estático con la información obtenida que puede ser mostrada en github-pages.
+
+### Github Action
+
+Para ejecutar el script (encargado de obtener la información y construir el html) y publicar la página se utiliza un github action que se define a partir de un archivo `.yml` con las ordenes de ejecución: [deploy.yml](./.github/workflows/deploy.yml).
+
+Lo importante de este archivo son:
+
+**Ejecución de la acción**
+
+```yml
+on:
+  # Ejecuta la acción al hacer un push en la rama main
+  push:
+    branches: [main]
+  # Ordena la ejecución de la acción en un momento dado
+  schedule:
+    - cron: "0 0 * * 6" # cada viernes de cada més
+  workflow_dispatch:
+```
+
+**Compilación**
+
+```yml
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Instala dependencias y ejecuta el script
+      - name: Build project
+        run: |
+          npm install
+          npm start
+
+      # Crea el artifact de github, donde se guarda el resultado
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+```
+
+**Despliegue**
+
+```yml
+# Despliegue en github-pages
+deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+```
