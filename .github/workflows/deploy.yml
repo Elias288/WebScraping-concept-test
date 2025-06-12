@@ -22,7 +22,7 @@ jobs:
       - name: Build project
         run: |
           npm install
-          npm run build
+          npm start
 
       # Upload artifact
       - name: Upload artifact
