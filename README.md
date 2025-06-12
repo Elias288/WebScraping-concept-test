@@ -69,6 +69,46 @@ function loadData(): void {
 }
 ```
 
+El comando `ejs.renderFile(TEMPLATE_PATH, data, (err, html) => {` toma el archivo `template.ejs` y le pasa el valor de `data: { items: Product[] }` para cargar:
+
+```html
+<body>
+    <h1>Web scraping</h1>
+    <div id="root">
+        <div class="postsContainer">
+            <% items.forEach(function(item) { %>
+                <%- include("partials/item", item) %>
+                    <% }); %>
+        </div>
+    </div>
+</body>
+```
+
+En este template se está recorriendo el valor de `items` y por cada objeto de `items` se está llamando al template [partial/item.ejs](./views/partials/item.ejs).
+
+```html
+<div class="postContent">
+    <h2>
+        <%= title %>
+    </h2>
+    <img src="<%= image %>" alt="<%= title %>">
+
+    <div class="info">
+        <p class="price">
+            price:
+            <strong>
+                <%= price %>
+            </strong>
+        </p>
+
+        <span>
+            creation time:
+            <%= date %>
+        </span>
+    </div>
+</div>
+```
+
 Como resultado se crea un `index.html` estático con la información obtenida que puede ser mostrada en github-pages.
 
 ### Github Action
