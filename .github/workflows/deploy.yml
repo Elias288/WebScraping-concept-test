@@ -2,10 +2,10 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches: 
+    - main
   schedule:
-    - cron: "0 0 * * 6" # cada viernes de cada més
-  workflow_dispatch:
+    - cron: "0 0 * * 1" # cada lunes de cada més (https://crontab.guru/#0_0_*_*_1)
 
 permissions:
   contents: read
