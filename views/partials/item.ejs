@@ -1,20 +1,15 @@
 <div class="postContent">
-    <h2>
-        <%= title %>
-    </h2>
-    <img src="<%= image %>" alt="<%= title %>">
+  <h2><%= title %></h2>
+  <img src="<%= image %>" alt="<%= title %>" />
 
-    <div class="info">
-        <p class="price">
-            price:
-            <strong>
-                <%= price %>
-            </strong>
-        </p>
+  <div class="info">
+    <p><span>Country: </span><strong><%= country %></strong></p>
 
-        <span>
-            creation time:
-            <%= date %>
-        </span>
-    </div>
+    <p class="price">
+      <span> Price: </span>
+      <strong> <%= price %> </strong>
+    </p>
+
+    <span> Creation time: <%= date %> </span>
+  </div>
 </div>
