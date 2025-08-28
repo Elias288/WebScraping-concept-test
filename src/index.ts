@@ -2,14 +2,25 @@ import * as cheerio from "cheerio";
 import ejs from "ejs";
 import fs from "fs";
 
+// En ambiente dev se usa dotenv
+if (!process.env.NODE_ENV || process.env.NODE_ENV == "dev") {
+  require("dotenv").config();
+}
+
+if (!process.env.URL || !process.env.URLS) {
+  throw new Error("Faltan variables de entorno");
+}
+
 const TEMPLATE_PATH = "./views/template.ejs";
 const OUT_HTML_FILE = "./dist/index.html";
-const URL = "https://www.bitgree.com/earn-bitcoin-cash?fc%5B0%5D=<id>";
-const URLS = [
-  { country: "EEUU", id: "us" },
-  { country: "Uruguay", id: "uy" },
-  { country: "Argentina", id: "ar" },
-];
+const URL = process.env.URL;
+const URLS = process.env.URLS
+  .split("|")
+  .filter(Boolean)
+  .map((item) => {
+    const [country, id] = item.split(",");
+    return { country, id };
+  });
 
 interface Product {
   title: string;
@@ -45,6 +56,7 @@ async function loadData(): Promise<void> {
       return fetchData(u.country, URL.replace("<id>", u.id));
     })
   );
+
   const data = {
     items: posts.flat(),
     creationDate: new Date().toLocaleDateString(),

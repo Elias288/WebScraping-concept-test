@@ -34,15 +34,23 @@
       margin-inline: auto;
     }
 
-    .postContent {
-      background-color: #fff;
-      margin-bottom: 2rem;
-      border-radius: 10px;
-      padding: 1rem 2rem;
+    .postsContainer {
+      margin-top: 2rem;
+      margin-bottom: 10rem;
+
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(375px, 1fr));
+      gap: 20px;
     }
 
-    .postContent:first-of-type {
-      margin-top: 2rem;
+    .postContent {
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 1rem 2rem;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
     .postContent img {
