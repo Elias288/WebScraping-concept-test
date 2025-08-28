@@ -15,8 +15,6 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      NODE_ENV: 'production'
     steps:
       - uses: actions/checkout@v4
 
@@ -25,6 +23,8 @@ jobs:
         run: |
           npm install
           npm start
+        env:
+          NODE_ENV: 'production'
 
       # Upload artifact
       - name: Upload artifact
