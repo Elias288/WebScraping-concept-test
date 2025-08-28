@@ -6,9 +6,7 @@ on:
     - main
   schedule:
     - cron: "0 0 * * 6" # cada lunes de cada més (https://crontab.guru/#0_0_*_*_6)
-env:
-  env_var: ${{ vars.ENV_CONTEXT_VAR }}
-
+    
 permissions:
   contents: read
   pages: write
@@ -17,6 +15,8 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
     steps:
       - uses: actions/checkout@v4
 
