@@ -18,16 +18,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Create environment file
-      - name: Create .env file
-        run: |
-          echo "URL=$URL" >> .env
-          echo "URLS=$URLS" >> .env
-
       # Install and build
       - name: Build project
         run: |
-          npm install
+          npm ci
           npm start
         env:
           NODE_ENV: 'production'
