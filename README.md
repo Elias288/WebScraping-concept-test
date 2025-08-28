@@ -73,7 +73,9 @@ async function loadData(): Promise<void> {
 
 > [!NOTE]
 > `URLS` y `URL` se obtiene desde `process.env`.
+>
 > En ambiente dev se usa el paquete de node `dotenv`.
+> 
 > En ambiente de producción se usa la configuración de github `Environments` (`github-pages`).
 
 El comando `ejs.renderFile(TEMPLATE_PATH, data, (err, html) => {` toma el archivo `template.ejs` y le pasa el valor de `data: { items: Product[] }` para cargar:
