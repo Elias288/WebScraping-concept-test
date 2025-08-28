@@ -71,6 +71,11 @@ async function loadData(): Promise<void> {
 }
 ```
 
+> [!NOTE]
+> `URLS` y `URL` se obtiene desde `process.env`.
+> En ambiente dev se usa el paquete de node `dotenv`.
+> En ambiente de producción se usa la configuración de github `Environments` (`github-pages`).
+
 El comando `ejs.renderFile(TEMPLATE_PATH, data, (err, html) => {` toma el archivo `template.ejs` y le pasa el valor de `data: { items: Product[] }` para cargar:
 
 ```html
@@ -138,6 +143,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Se configura que utilice las variables del entorno github-pages configurado en el repositorio de github
+    environment:
+      name: github-pages
     steps:
       - uses: actions/checkout@v4
 
@@ -146,6 +154,11 @@ jobs:
         run: |
           npm install
           npm start
+        env:
+          # Se definen las variables con los valores del entrno de github
+          URL: ${{ vars.URL }}
+          URLS: ${{ vars.URLS }}
+          NODE_ENV: 'production' # Indica que está en el ambiente de producción
 
       # Crea el artifact de github, donde se guarda el resultado
       - name: Upload artifact
