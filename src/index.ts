@@ -3,7 +3,7 @@ import ejs from "ejs";
 import fs from "fs";
 
 // En ambiente dev se usa dotenv
-if (!process.env.NODE_ENV || process.env.NODE_ENV == "dev") {
+if (!process.env.NODE_ENV || process.env.NODE_ENV === "dev") {
   require("dotenv").config();
 }
 
