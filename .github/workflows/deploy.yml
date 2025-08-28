@@ -24,8 +24,8 @@ jobs:
           npm ci
           npm start
         env:
-          URL: ${{ env.URL }}
-          URLS: ${{ env.URLS }}
+          URL: ${{ vars.URL }}
+          URLS: ${{ vars.URLS }}
           NODE_ENV: 'production'
 
       # Upload artifact
